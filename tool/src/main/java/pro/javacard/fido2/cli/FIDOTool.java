@@ -404,6 +404,9 @@ public final class FIDOTool extends CommandLineInterface {
                             makeCredentialCommand.withV1PinAuth(left16(hmac_sha256(pinToken, clientDataHash)));
                         }
 
+                        if (options.has(OPT_EP))
+                            makeCredentialCommand.withEP((Integer)options.valueOf(OPT_EP));
+
                         if (options.has(OPT_ED25519))
                             makeCredentialCommand.withAlgorithm(COSEPublicKey.Ed25519);
                         else

@@ -30,6 +30,8 @@ public class MakeCredentialCommand {
     byte[] pinAuth;
     int pinProtocol = -1;
 
+    int enterpriseAttestation = -1;
+
     public MakeCredentialCommand withClientDataHash(byte[] hash) {
         clientDataHash = hash.clone();
         return this;
@@ -85,7 +87,10 @@ public class MakeCredentialCommand {
         options.put(option, value);
         return this;
     }
-
+    public MakeCredentialCommand withEP(int ep) {
+        enterpriseAttestation = ep;
+        return this;
+    }
     // Build the CBOR structure
     public byte[] build() {
         if (clientDataHash == null || origin == null || userId == null || algorithms.size() == 0)
@@ -105,6 +110,8 @@ public class MakeCredentialCommand {
             if (pinProtocol != -1)
                 numElements++;
             if (excludeList.size() > 0)
+                numElements++;
+            if (enterpriseAttestation != -1)
                 numElements++;
 
             generator.writeStartObject(numElements);
@@ -182,6 +189,11 @@ public class MakeCredentialCommand {
             if (pinProtocol != -1) {
                 generator.writeFieldId(MakeCredentialCommandParameter.pinProtocol.value());
                 generator.writeNumber(pinProtocol);
+            }
+            if (enterpriseAttestation != -1)
+            {
+                generator.writeFieldId(MakeCredentialCommandParameter.enterpriseAttestation.value());
+                generator.writeNumber(enterpriseAttestation);                
             }
             generator.writeEndObject();
 
